@@ -1,0 +1,47 @@
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: gray;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#canvas {
+    background-color:rgb(100, 100, 100);
+    border: solid white 5px;
+    border-radius: 20px;
+}
+
+#controls {
+    display: flex;
+    gap: 20px;
+}
+
+#visual-toggle-container, #circle-count-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 250px;
+    background-color: rgb(100, 100, 100);
+    border: solid white 4px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#visual-toggle {
+    margin-left: 20px;
+    transform: scale(1.5);
+}
+
+#circle-count {
+    margin-left: 10px;
+    width: 40px;
+    height: 20px;
+    font-size: 18px;
+    border-radius: 5px;
+}
