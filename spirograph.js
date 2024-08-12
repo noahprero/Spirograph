@@ -1,11 +1,21 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const visual_toggle = document.getElementById("visual-toggle");
+canvas.width = window.innerWidth * 0.8;
+canvas.height = window.innerHeight * 0.8;
+ctx.globalAlpha = 0.3
+ctx.lineWidth = 1;
+
+const trail_canvas = document.getElementById("trail-canvas");
+const trail_ctx = trail_canvas.getContext("2d");
+trail_canvas.width = window.innerWidth * 0.8;
+trail_canvas.height = window.innerHeight * 0.8;
+
+const visual_toggle_circles = document.getElementById("visual-toggle-circles");
+const visual_toggle_trail = document.getElementById("visual-toggle-trail");
 const circle_count_input = document.getElementById("circle-count");
 const base_radius_input = document.getElementById("base-circle-radius");
 const size_change_slider = document.getElementById("size-change");
-canvas.width = window.innerWidth * 0.8;
-canvas.height = window.innerHeight * 0.8;
+
 
 window.addEventListener('resize', function() {
     canvas.width = window.innerWidth * 0.8;
@@ -34,21 +44,31 @@ base_radius_input.addEventListener(('change'), function() {
 
 size_change_slider.addEventListener(('change'), function() {
     size_change = this.value;
-    console.log(size_change);
 })
 
 
-visual_toggle.addEventListener('change', function() {
+visual_toggle_circles.addEventListener('change', function() {
     clearCanvas(ctx, canvas);
     if(this.checked){
+        draw_circles = true;
+    }
+    else{
+        draw_circles = false;
+    }
+});
+
+
+visual_toggle_trail.addEventListener(("change"), function() {
+    clearCanvas(trail_ctx, trail_canvas);
+    if(this.checked){
+        draw_trail = true;
+    }
+    else{
         // Reset tip position to avoid drawing incorrect lines
         prev_tip_x = 0;
         prev_tip_y = 0;
 
-        draw_circles = false;
-    }
-    else{
-        draw_circles = true;
+        draw_trail = false;
     }
 });
 
@@ -66,7 +86,6 @@ class Circle {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        ctx.lineWidth = 3;
         ctx.stroke();
     }
 
@@ -86,7 +105,18 @@ function clearCanvas(ctx, canvas){
 }
 
 
+function clearCanvasAll() {
+    clearCanvas(ctx, canvas);
+    clearCanvas(trail_ctx, trail_canvas);
+}
+
+
 function initialize_circle_array(){
+    // Reset
+    clearCanvasAll();
+    prev_tip_x = 0;
+    prev_tip_y = 0;
+
     circles = [];
     // Base circle
     let base_circle = new Circle(ctx, canvas.width / 2, canvas.height / 2, base_radius, 0, null);
@@ -103,17 +133,17 @@ function initialize_circle_array(){
 // Main
 let base_radius = parseInt(base_radius_input.value);
 let draw_circles = true;
+let draw_trail = false;
 let circles = [];
 let circle_count = circle_count_input.value;
 let size_change = 0.8;  // Size of each circle relative to the previous circle
-let speed_multiplier = 0.1  // Value to multiply the initial random speed by
-
-
-base_circle = initialize_circle_array();
+let speed_multiplier = 0.04  // Value to multiply the initial random speed by
 
 // Keep track of the previous tip circle position to draw lines making up the trail
 let prev_tip_x = 0;
 let prev_tip_y = 0;
+
+base_circle = initialize_circle_array();
 
 function animate() {
     if(draw_circles){
@@ -138,15 +168,17 @@ function animate() {
             circles[i].draw();
         }
         
-        if(i == circle_count - 1 && !draw_circles){
-            if(prev_tip_x == 0 && prev_tip_y == 0){
-                prev_tip_x = x;
-                prev_tip_y = y;
+        if(i == circle_count - 1){
+            if(draw_trail){
+                if(prev_tip_x == 0 && prev_tip_y == 0){
+                    prev_tip_x = x;
+                    prev_tip_y = y;
+                }
+                trail_ctx.beginPath();
+                trail_ctx.moveTo(x, y);
+                trail_ctx.lineTo(prev_tip_x, prev_tip_y);
+                trail_ctx.stroke();
             }
-            ctx.beginPath();
-            ctx.moveTo(prev_tip_x, prev_tip_y);
-            ctx.lineTo(x, y);
-            ctx.stroke();
             prev_tip_x = x;
             prev_tip_y = y;
         }
