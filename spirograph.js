@@ -8,7 +8,8 @@ const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
 trail_canvas.width = window.innerWidth * 0.8;
 trail_canvas.height = window.innerHeight * 0.8;
-trail_ctx.globalAlpha = 0.3;
+trail_ctx.globalAlpha = 0.5
+trail_ctx.strokeStyle = "white";
 
 const rotation_canvas = document.getElementById("rotation-canvas");
 const rotation_ctx = rotation_canvas.getContext("2d");
@@ -206,13 +207,12 @@ function animate() {
 
         circles[i].setPos(x, y);
         circles[i].setRadius(radius);
-        
+
         if(draw_circles){
             circles[i].draw();
         }
 
         if(draw_rotations) {
-            
             rotation_ctx.beginPath();
             rotation_ctx.moveTo(circles[i-1].x, circles[i-1].y);
             rotation_ctx.lineTo(x, y);
