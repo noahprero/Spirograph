@@ -2,8 +2,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth * 0.8;
 canvas.height = window.innerHeight * 0.8;
-ctx.globalAlpha = 0.3
-ctx.lineWidth = 1;
+ctx.globalAlpha = 0.3;
 
 const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
@@ -23,9 +22,11 @@ window.addEventListener('resize', function() {
 
     // Recenter base circle
     base_circle.setPos(canvas.width / 2, canvas.height/2);
-
+    
     prev_tip_x = 0;
     prev_tip_y = 0;
+
+    ctx.globalAlpha = 0.3;
 });
 
 
