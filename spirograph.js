@@ -8,7 +8,7 @@ const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
 trail_canvas.width = window.innerWidth * 0.8;
 trail_canvas.height = window.innerHeight * 0.8;
-trail_ctx.globalAlpha = 0.5
+trail_ctx.globalAlpha = 0.5;
 trail_ctx.strokeStyle = "white";
 
 const rotation_canvas = document.getElementById("rotation-canvas");
@@ -53,7 +53,7 @@ base_radius_input.addEventListener(('change'), function() {
 
 size_change_slider.addEventListener(('change'), function() {
     size_change = this.value;
-})
+});
 
 
 visual_toggle_circles.addEventListener('change', function() {
@@ -176,7 +176,7 @@ let draw_rotations = visual_toggle_rotations.checked;
 let circles = [];
 let circle_count = circle_count_input.value;
 let size_change = size_change_slider.value;  // Size of each circle relative to the previous circle
-let speed_multiplier = 0.06  // Value to multiply the initial random speed by
+let speed_multiplier = 0.06;  // Value to multiply the initial random speed by
 
 // Keep track of the previous tip circle position to draw lines making up the trail
 let prev_tip_x = 0;
