@@ -24,8 +24,7 @@ const size_change_slider = document.getElementById("size-change");
 
 
 window.addEventListener('resize', function() {
-    canvas.width = window.innerWidth * 0.8;
-    canvas.height = window.innerHeight * 0.8;
+    resizeCanvases(0.8);
 
     // Recenter base circle
     base_circle.setPos(canvas.width / 2, canvas.height/2);
@@ -33,7 +32,7 @@ window.addEventListener('resize', function() {
     prev_tip_x = 0;
     prev_tip_y = 0;
 
-    ctx.globalAlpha = 0.3;
+    trail_ctx.globalAlpha = 0.3;
 });
 
 
@@ -117,6 +116,21 @@ class Circle {
     setRadius(new_radius) {
         this.r = new_radius;
     }
+}
+
+
+function resizeCanvases(percentage){
+    let width = window.innerWidth * percentage;
+    let height = window.innerHeight * percentage;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    trail_canvas.width = width;
+    trail_canvas.height = height;
+
+    rotation_canvas.width = width;
+    rotation_canvas.height = height;
 }
 
 
