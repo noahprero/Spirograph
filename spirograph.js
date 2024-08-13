@@ -176,7 +176,6 @@ let circles = [];
 let circle_count = circle_count_input.value;
 let size_change = size_change_slider.value;  // Size of each circle relative to the previous circle
 let speed_multiplier = 0.06  // Value to multiply the initial random speed by
-let rotation_offset = 4;  // Value to rotation_offset the rotation's innaccuracy to the circle's center
 
 // Keep track of the previous tip circle position to draw lines making up the trail
 let prev_tip_x = 0;
@@ -204,8 +203,10 @@ function animate() {
         
         let x = circles[i-1].x + radius_sum * Math.cos(circles[i].angle);
         let y = circles[i-1].y + radius_sum * Math.sin(circles[i].angle);
+
         circles[i].setPos(x, y);
         circles[i].setRadius(radius);
+        
         if(draw_circles){
             circles[i].draw();
         }
@@ -213,8 +214,8 @@ function animate() {
         if(draw_rotations) {
             
             rotation_ctx.beginPath();
-            rotation_ctx.moveTo(circles[i-1].x + rotation_offset, circles[i-1].y + rotation_offset);
-            rotation_ctx.lineTo(x + rotation_offset, y + rotation_offset);
+            rotation_ctx.moveTo(circles[i-1].x, circles[i-1].y);
+            rotation_ctx.lineTo(x, y);
             rotation_ctx.stroke();
         }
         
