@@ -160,8 +160,8 @@ function initialize_circle_array() {
     circles.push(base_circle);
 
     for(let i = 1; i < circle_count; i ++) {
-        //circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
-        circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 100));  // Fractal formula
+        circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
+        //circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 100));  // Fractal formula
     }
     return base_circle;
 }
