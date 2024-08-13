@@ -39,14 +39,14 @@ window.addEventListener('resize', function() {
 circle_count_input.addEventListener(('change'), function() {
     // Change amount of circles then reinitialize the array
     circle_count = this.value;
-    initialize_circle_array();
+    base_circle = initialize_circle_array();
 });
 
 
 base_radius_input.addEventListener(('change'), function() {
     base_circle.setRadius(parseInt(this.value));
     base_radius = parseInt(this.value);
-    initialize_circle_array();
+    base_circle = initialize_circle_array();
 });
 
 
@@ -211,8 +211,8 @@ function animate() {
 
         if(draw_rotations) {
             rotation_ctx.beginPath();
-            rotation_ctx.moveTo(x, y);
-            rotation_ctx.lineTo(circles[i-1].x, circles[i-1].y);
+            rotation_ctx.moveTo(circles[i-1].x, circles[i-1].y);
+            rotation_ctx.lineTo(x, y);
             rotation_ctx.stroke();
         }
         
