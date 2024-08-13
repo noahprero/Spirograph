@@ -2,15 +2,22 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth * 0.8;
 canvas.height = window.innerHeight * 0.8;
-ctx.globalAlpha = 0.3;
+
 
 const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
 trail_canvas.width = window.innerWidth * 0.8;
 trail_canvas.height = window.innerHeight * 0.8;
+trail_ctx.globalAlpha = 0.3;
+
+const rotation_canvas = document.getElementById("rotation-canvas");
+const rotation_ctx = rotation_canvas.getContext("2d");
+rotation_canvas.width = window.innerWidth * 0.8;
+rotation_canvas.height = window.innerHeight * 0.8;
 
 const visual_toggle_circles = document.getElementById("visual-toggle-circles");
 const visual_toggle_trail = document.getElementById("visual-toggle-trail");
+const visual_toggle_rotations = document.getElementById("visual-toggle-rotations");
 const circle_count_input = document.getElementById("circle-count");
 const base_radius_input = document.getElementById("base-circle-radius");
 const size_change_slider = document.getElementById("size-change");
@@ -61,7 +68,7 @@ visual_toggle_circles.addEventListener('change', function() {
 
 visual_toggle_trail.addEventListener(("change"), function() {
     clearCanvas(trail_ctx, trail_canvas);
-    if(this.checked){
+    if(this.checked) {
         draw_trail = true;
     }
     else{
@@ -70,6 +77,17 @@ visual_toggle_trail.addEventListener(("change"), function() {
         prev_tip_y = 0;
 
         draw_trail = false;
+    }
+});
+
+
+visual_toggle_rotations.addEventListener(("change"), function() {
+    clearCanvas(rotation_ctx, rotation_canvas);
+    if(this.checked) {
+        draw_rotations = true;
+    }
+    else {
+        draw_rotations = false;
     }
 });
 
@@ -109,6 +127,7 @@ function clearCanvas(ctx, canvas) {
 function clearCanvasAll() {
     clearCanvas(ctx, canvas);
     clearCanvas(trail_ctx, trail_canvas);
+    clearCanvas(rotation_ctx, rotation_canvas);
 }
 
 
@@ -125,9 +144,9 @@ function initialize_circle_array() {
     // Add base circle and then remaining circles with random speeds to array
     circles.push(base_circle);
 
-    for(let i = 1; i < circle_count; i ++){
-        circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
-        //circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 1000));  // Fractal formula
+    for(let i = 1; i < circle_count; i ++) {
+        //circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
+        circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 1000));  // Fractal formula
     }
     return base_circle;
 }
@@ -137,6 +156,7 @@ function initialize_circle_array() {
 let base_radius = parseInt(base_radius_input.value);
 let draw_circles = true;
 let draw_trail = true;
+let draw_rotations = false;
 let circles = [];
 let circle_count = circle_count_input.value;
 let size_change = size_change_slider.value;  // Size of each circle relative to the previous circle
@@ -149,30 +169,38 @@ let prev_tip_y = 0;
 base_circle = initialize_circle_array();
 
 function animate() {
-    if(draw_circles){
+    if(draw_circles) {
         clearCanvas(ctx, canvas);
         base_circle.draw();
     }
 
+    if(draw_rotations) {
+        clearCanvas(rotation_ctx, rotation_canvas);
+    }
+
     radius = parseInt(base_radius_input.value);
-    let prev_x = base_circle.x;
-    let prev_y = base_circle.y;
-    let prev_radius = base_circle.r;
 
     // Calculate each circle's new position 
     for (let i = 1; i < circle_count; i++) {
         radius *= size_change;
-        radius_sum = radius + prev_radius;
-        let x = prev_x + radius_sum * Math.cos(circles[i].angle);
-        let y = prev_y + radius_sum * Math.sin(circles[i].angle);
+        radius_sum = radius + circles[i-1].r;
+        let x = circles[i-1].x + radius_sum * Math.cos(circles[i].angle);
+        let y = circles[i-1].y + radius_sum * Math.sin(circles[i].angle);
         circles[i].setPos(x, y);
         circles[i].setRadius(radius);
         if(draw_circles){
             circles[i].draw();
         }
+
+        if(draw_rotations) {
+            rotation_ctx.beginPath();
+            rotation_ctx.moveTo(x, y);
+            rotation_ctx.lineTo(circles[i-1].x, circles[i-1].y);
+            rotation_ctx.stroke();
+        }
         
         if(i == circle_count - 1){
-            if(draw_trail){
+            if(draw_trail) {
                 if(prev_tip_x == 0 && prev_tip_y == 0){
                     prev_tip_x = x;
                     prev_tip_y = y;
@@ -185,10 +213,6 @@ function animate() {
             prev_tip_x = x;
             prev_tip_y = y;
         }
-
-        prev_radius = radius;
-        prev_x = x;
-        prev_y = y;
 
         circles[i].angle += circles[i].speed;
     }

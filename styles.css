@@ -9,7 +9,7 @@ body {
     overflow: hidden;
 }
 
-#trail-canvas {
+#trail-canvas, #rotation-canvas {
     position: absolute;
 }
 
