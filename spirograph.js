@@ -46,6 +46,7 @@ circle_count_input.addEventListener(('change'), function() {
 
 base_radius_input.addEventListener(('change'), function() {
     base_circle.setRadius(parseInt(this.value));
+    base_radius = parseInt(this.value);
     initialize_circle_array();
 });
 
@@ -154,9 +155,9 @@ function initialize_circle_array() {
 
 // Main
 let base_radius = parseInt(base_radius_input.value);
-let draw_circles = true;
-let draw_trail = true;
-let draw_rotations = false;
+let draw_circles = visual_toggle_circles.checked;
+let draw_trail = visual_toggle_trail.checked;
+let draw_rotations = visual_toggle_rotations.checked;
 let circles = [];
 let circle_count = circle_count_input.value;
 let size_change = size_change_slider.value;  // Size of each circle relative to the previous circle
@@ -169,6 +170,7 @@ let prev_tip_y = 0;
 base_circle = initialize_circle_array();
 
 function animate() {
+    
     if(draw_circles) {
         clearCanvas(ctx, canvas);
         base_circle.draw();
@@ -178,12 +180,13 @@ function animate() {
         clearCanvas(rotation_ctx, rotation_canvas);
     }
 
-    radius = parseInt(base_radius_input.value);
+    radius = base_radius;
 
     // Calculate each circle's new position 
     for (let i = 1; i < circle_count; i++) {
         radius *= size_change;
         radius_sum = radius + circles[i-1].r;
+        
         let x = circles[i-1].x + radius_sum * Math.cos(circles[i].angle);
         let y = circles[i-1].y + radius_sum * Math.sin(circles[i].angle);
         circles[i].setPos(x, y);
