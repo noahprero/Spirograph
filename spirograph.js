@@ -22,7 +22,7 @@ window.addEventListener('resize', function() {
 
     // Recenter base circle
     base_circle.setPos(canvas.width / 2, canvas.height/2);
-    
+
     prev_tip_x = 0;
     prev_tip_y = 0;
 
@@ -75,7 +75,7 @@ visual_toggle_trail.addEventListener(("change"), function() {
 
 
 class Circle {
-    constructor(ctx, x, y, r, angle, speed){
+    constructor(ctx, x, y, r, angle, speed) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
@@ -101,7 +101,7 @@ class Circle {
 }
 
 
-function clearCanvas(ctx, canvas){
+function clearCanvas(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -112,7 +112,7 @@ function clearCanvasAll() {
 }
 
 
-function initialize_circle_array(){
+function initialize_circle_array() {
     // Reset
     clearCanvasAll();
     prev_tip_x = 0;
@@ -120,12 +120,14 @@ function initialize_circle_array(){
 
     circles = [];
     // Base circle
-    let base_circle = new Circle(ctx, canvas.width / 2, canvas.height / 2, base_radius, 0, null);
+    let base_circle = new Circle(ctx, canvas.width / 2, canvas.height / 2, base_radius, 0, 0);
 
     // Add base circle and then remaining circles with random speeds to array
     circles.push(base_circle);
+
     for(let i = 1; i < circle_count; i ++){
         circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
+        //circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 1000));  // Fractal formula
     }
     return base_circle;
 }
@@ -134,11 +136,11 @@ function initialize_circle_array(){
 // Main
 let base_radius = parseInt(base_radius_input.value);
 let draw_circles = true;
-let draw_trail = false;
+let draw_trail = true;
 let circles = [];
 let circle_count = circle_count_input.value;
-let size_change = 0.8;  // Size of each circle relative to the previous circle
-let speed_multiplier = 0.04  // Value to multiply the initial random speed by
+let size_change = size_change_slider.value;  // Size of each circle relative to the previous circle
+let speed_multiplier = 0.1  // Value to multiply the initial random speed by
 
 // Keep track of the previous tip circle position to draw lines making up the trail
 let prev_tip_x = 0;
