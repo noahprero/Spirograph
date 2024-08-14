@@ -3,8 +3,6 @@ const circle_ctx = circle_canvas.getContext("2d");
 
 const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
-trail_ctx.globalAlpha = 0.5;
-trail_ctx.strokeStyle = "white";
 
 const rotation_canvas = document.getElementById("rotation-canvas");
 const rotation_ctx = rotation_canvas.getContext("2d");
@@ -27,8 +25,6 @@ window.addEventListener('resize', function() {
 
     prev_tip_x = 0;
     prev_tip_y = 0;
-
-    trail_ctx.globalAlpha = 0.3;
 });
 
 
@@ -222,11 +218,14 @@ function animate() {
                     prev_tip_y = y;
                 }
 
+                trail_ctx.globalAlpha = 0.5;
+                trail_ctx.strokeStyle = "white";
                 trail_ctx.beginPath();
                 trail_ctx.moveTo(x, y);
                 trail_ctx.lineTo(prev_tip_x, prev_tip_y);
                 trail_ctx.stroke();
             }
+            
             prev_tip_x = x;
             prev_tip_y = y;
         }
