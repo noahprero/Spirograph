@@ -1,20 +1,15 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth * 0.8;
-canvas.height = window.innerHeight * 0.8;
-
+const circle_canvas = document.getElementById("circle-canvas");
+const circle_ctx = circle_canvas.getContext("2d");
 
 const trail_canvas = document.getElementById("trail-canvas");
 const trail_ctx = trail_canvas.getContext("2d");
-trail_canvas.width = window.innerWidth * 0.8;
-trail_canvas.height = window.innerHeight * 0.8;
 trail_ctx.globalAlpha = 0.5;
 trail_ctx.strokeStyle = "white";
 
 const rotation_canvas = document.getElementById("rotation-canvas");
 const rotation_ctx = rotation_canvas.getContext("2d");
-rotation_canvas.width = window.innerWidth * 0.8;
-rotation_canvas.height = window.innerHeight * 0.8;
+
+resizeCanvases(0.8);
 
 const visual_toggle_circles = document.getElementById("visual-toggle-circles");
 const visual_toggle_trail = document.getElementById("visual-toggle-trail");
@@ -28,7 +23,7 @@ window.addEventListener('resize', function() {
     resizeCanvases(0.8);
 
     // Recenter base circle
-    base_circle.setPos(canvas.width / 2, canvas.height/2);
+    base_circle.setPos(circle_canvas.width / 2, circle_canvas.height/2);
 
     prev_tip_x = 0;
     prev_tip_y = 0;
@@ -57,7 +52,7 @@ size_change_slider.addEventListener(('change'), function() {
 
 
 visual_toggle_circles.addEventListener('change', function() {
-    clearCanvas(ctx, canvas);
+    clearCanvas(circle_ctx, circle_canvas);
     if(this.checked){
         draw_circles = true;
     }
@@ -104,9 +99,9 @@ class Circle {
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
-        ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+        this.ctx.stroke();
     }
 
     setPos(new_x, new_y) {
@@ -124,8 +119,8 @@ function resizeCanvases(percentage){
     let width = window.innerWidth * percentage;
     let height = window.innerHeight * percentage;
 
-    canvas.width = width;
-    canvas.height = height;
+    circle_canvas.width = width;
+    circle_canvas.height = height;
 
     trail_canvas.width = width;
     trail_canvas.height = height;
@@ -141,7 +136,7 @@ function clearCanvas(ctx, canvas) {
 
 
 function clearCanvasAll() {
-    clearCanvas(ctx, canvas);
+    clearCanvas(circle_ctx, circle_canvas);
     clearCanvas(trail_ctx, trail_canvas);
     clearCanvas(rotation_ctx, rotation_canvas);
 }
@@ -155,14 +150,14 @@ function initialize_circle_array() {
 
     circles = [];
     // Base circle
-    let base_circle = new Circle(ctx, canvas.width / 2, canvas.height / 2, base_radius, 0, 0);
+    let base_circle = new Circle(circle_ctx, circle_canvas.width / 2, circle_canvas.height / 2, base_radius, 0, 0);
 
     // Add base circle and then remaining circles with random speeds to array
     circles.push(base_circle);
 
     for(let i = 1; i < circle_count; i ++) {
-        circles.push(new Circle(ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
-        //circles.push(new Circle(ctx, 1, 1, 1, 0, Math.pow(-4, i) / 100));  // Fractal formula
+        circles.push(new Circle(circle_ctx, 1, 1, 1, 0, (Math.random() * 2 - 1) * speed_multiplier));
+        //circles.push(new Circle(circle_ctx, 1, 1, 1, 0, Math.pow(-4, i) / 100));  // Fractal formula
     }
     return base_circle;
 }
@@ -187,7 +182,7 @@ base_circle = initialize_circle_array();
 function animate() {
     
     if(draw_circles) {
-        clearCanvas(ctx, canvas);
+        clearCanvas(circle_ctx, circle_canvas);
         base_circle.draw();
     }
 
@@ -208,7 +203,7 @@ function animate() {
         circles[i].setPos(x, y);
         circles[i].setRadius(radius);
 
-        if(draw_circles){
+        if(draw_circles) {
             circles[i].draw();
         }
 
@@ -219,12 +214,14 @@ function animate() {
             rotation_ctx.stroke();
         }
         
-        if(i == circle_count - 1){
+        if(i == circle_count - 1) {
             if(draw_trail) {
+                // If the canvas was reset (ie the tips need to be recalculated)
                 if(prev_tip_x == 0 && prev_tip_y == 0){
                     prev_tip_x = x;
                     prev_tip_y = y;
                 }
+
                 trail_ctx.beginPath();
                 trail_ctx.moveTo(x, y);
                 trail_ctx.lineTo(prev_tip_x, prev_tip_y);
@@ -236,7 +233,6 @@ function animate() {
 
         circles[i].angle += circles[i].speed;
     }
-
     
     requestAnimationFrame(animate);
 }
