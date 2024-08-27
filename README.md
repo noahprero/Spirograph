@@ -8,5 +8,7 @@ A spirograph generator with options for:
 - Setting the size of the circles relative to the previous circle
 - Reloading the spirograph for a new configuration
 
+https://noahprero.com/nonogram
+
 
 ![spirograph](example.gif)
